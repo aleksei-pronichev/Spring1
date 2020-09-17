@@ -3,41 +3,39 @@ package com.geekbrains.spring.context.app;
  * Корзина
  *
  * @author Aleksei Pronichev
- * 16.09.2020
+ * 17.09.2020
  */
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Scope("prototype")
 public class Cart {
-    private final List<Product> products;
+    private final Map<Product, Integer> products;
     private ProductRepository productRepository;
 
     @Autowired
     public Cart() {
-        this.products = new ArrayList<>();
+        this.products = new HashMap<>();
     }
 
-    @Autowired
+    @PostConstruct
     private void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 
-    public boolean addProduct(int i) {
+    public void addProduct(int i) {
         Product product = productRepository.getByID(i);
-        if (product == null) {
-            return false;
-        }
-        return products.add(product);
+        products.merge(product, 1, Integer::sum);
     }
 
     public void removeProduct(int i) {
-        products.removeIf(product -> product.getId() == i);
+        products.remove(productRepository.getByID(i));
     }
 }

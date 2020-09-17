@@ -6,25 +6,22 @@ package com.geekbrains.spring.context.app;
  * 16.09.2020
  */
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Component
 public class ProductRepository {
-    private List<Product> productList;
+    private final List<Product> productList;
 
     @Autowired
     private ProductRepository() {
         productList = new ArrayList<>();
-        productList.add(new Product(1, "Apple", 2));
-        productList.add(new Product(2, "Orange", 3));
-        productList.add(new Product(3, "Banana", 4));
-        productList.add(new Product(4, "Mango", 5));
-        productList.add(new Product(5, "Potato", 1));
     }
 
     public List<Product> getProductList() {
@@ -37,6 +34,25 @@ public class ProductRepository {
                 return product;
             }
         }
-        return null;
+        throw new ProductRepositoryException(i, "Product not found");
+    }
+
+    @PostConstruct
+    private void init() {
+        productList.add(new Product(1, "Apple", 2));
+        productList.add(new Product(2, "Orange", 3));
+        productList.add(new Product(3, "Banana", 4));
+        productList.add(new Product(4, "Mango", 5));
+        productList.add(new Product(5, "Potato", 1));
+    }
+
+    public static class ProductRepositoryException extends IndexOutOfBoundsException {
+        @Getter
+        private final int id;
+
+        public ProductRepositoryException(int id, String message) {
+            super(message);
+            this.id = id;
+        }
     }
 }

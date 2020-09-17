@@ -3,16 +3,12 @@ package com.geekbrains.spring.context.app;
  * Продукт
  *
  * @author Aleksei Pronichev
- * 16.09.2020
+ * 17.09.2020
  */
 
 import lombok.Data;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
 @Data
-@Scope("prototype")
 public class Product {
     private int id;
     private String name;

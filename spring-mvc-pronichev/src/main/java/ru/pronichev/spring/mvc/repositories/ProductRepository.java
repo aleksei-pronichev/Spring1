@@ -31,11 +31,15 @@ public class ProductRepository {
 
     public Product getByID(int id) {
         for (Product product : products) {
-            if (product.getId() ==  id) {
+            if (product.getId() == id) {
                 return product;
             }
         }
         throw new RepositoryException(id, "Product not found");
+    }
+
+    public void save(Product product) {
+        products.add(product);
     }
 
     @Getter
